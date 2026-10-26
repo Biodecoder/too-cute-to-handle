@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Too Cute to Handle! — #ねこがかわいくておしまいになるゲーム (English Version)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@700;800;900&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="viewport-wrapper">
+    <div id="game-stage">
+      <!-- 1. Main 2.5D Seaside Shop Plaza & Entities Canvas -->
+      <canvas id="plaza-canvas" width="1920" height="1080" class="dof-blur"></canvas>
+
+      <!-- 2. Playfield Persistent Foxtail Cat Teaser Hand Cursor (ねこじゃらしカーソル) -->
+      <div id="playfield-teaser-cursor" class="hidden">
+        <svg viewBox="0 0 180 210" width="175" height="205">
+          <!-- White outer sticker contour -->
+          <g stroke="#ffffff" stroke-width="11" stroke-linejoin="round" stroke-linecap="round" fill="none">
+            <path d="M115,145 Q84,100 56,64" />
+            <ellipse cx="38" cy="42" rx="34" ry="15" transform="rotate(-32 38 42)" />
+            <ellipse cx="94" cy="96" rx="18" ry="6" transform="rotate(-20 94 96)" />
+            <path d="M108,142 C98,132 114,118 124,130 C130,118 144,122 142,135 C152,126 164,134 158,148 C166,158 156,184 134,186 C112,188 98,168 104,152 Z" />
+          </g>
+          <!-- Green Stem & Leaf -->
+          <path d="M115,145 Q84,100 56,64" stroke="#166534" stroke-width="5.5" stroke-linecap="round" fill="none" />
+          <ellipse cx="94" cy="96" rx="18" ry="6" transform="rotate(-20 94 96)" fill="#84cc16" stroke="#166534" stroke-width="3.5" />
+          <!-- Fluffy Lime Foxtail Bristle Head -->
+          <ellipse cx="38" cy="42" rx="34" ry="15" transform="rotate(-32 38 42)" fill="#bef264" stroke="#3f6212" stroke-width="4" />
+          <path d="M18,32 Q36,38 56,52" stroke="#84cc16" stroke-width="2.5" stroke-linecap="round" fill="none" />
+          <!-- Cartoon White Gloved Hand Holding Stem -->
+          <path d="M108,142 C98,132 114,118 124,130 C130,118 144,122 142,135 C152,126 164,134 158,148 C166,158 156,184 134,186 C112,188 98,168 104,152 Z"
+                fill="#ffffff" stroke="#451a03" stroke-width="4.5" stroke-linejoin="round" />
+          <path d="M112,148 Q126,144 132,156" stroke="#451a03" stroke-width="3.5" stroke-linecap="round" fill="none" />
+        </svg>
+      </div>
+
+      <!-- 3. Manga/Comic Halftone Screentone Overlay (Active during Card Draft) -->
+      <div id="halftone-overlay" class="hidden">
+        <div class="halftone-band top-band"></div>
+        <div class="halftone-band bottom-band"></div>
+      </div>
+
+      <!-- 4. Foreground Blurred Terracotta Flowerpots (Tilt-Shift DoF Bokeh Layer) -->
+      <div id="dof-flowerpots-layer" class="active">
+        <div class="dof-pot pot-1"><div class="pot-flowers red"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+        <div class="dof-pot pot-2"><div class="pot-flowers orange"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+        <div class="dof-pot pot-3"><div class="pot-flowers red"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+        <div class="dof-pot pot-4"><div class="pot-flowers pink-yellow"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+        <div class="dof-pot pot-5"><div class="pot-flowers red"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+        <div class="dof-pot pot-6"><div class="pot-flowers orange"></div><div class="pot-bush"></div><div class="pot-base"></div></div>
+      </div>
+
+      <!-- 5. TOP HUD BAR (Portrait, 0/100 Heart Capacity Bar, WAVE 1 / 10) -->
+      <header id="top-hud" class="hidden">
+        <div class="hud-top-left">
+          <div class="hud-portrait-ring">
+            <img id="hud-portrait-img" alt="Protagonist" />
+          </div>
+          <div class="hud-heart-bar-shell">
+            <div class="hud-heart-track">
+              <div id="hud-heart-fill" style="width: 0%;"></div>
+              <span id="hud-heart-text">0 / 100</span>
+            </div>
+            <div class="hud-double-hearts">
+              <span class="heart-big">♥</span>
+              <span class="heart-small">♥</span>
+            </div>
+          </div>
+        </div>
+        <div id="hud-wave-text">WAVE 1 / 10</div>
+      </header>
+
+      <!-- 6. BOTTOM HUD BAR -->
+      <footer id="bottom-hud" class="hidden">
+        <!-- Far Left: Coin Counter Pill -->
+        <div class="hud-currency-pill coin-pill">
+          <div class="currency-icon coin-svg-wrap">
+            <svg viewBox="0 0 64 64" width="66" height="66">
+              <circle cx="32" cy="32" r="28" fill="#d99116" stroke="#451a03" stroke-width="4" />
+              <circle cx="30" cy="30" r="26" fill="#fcd34d" stroke="#451a03" stroke-width="3.5" />
+              <circle cx="30" cy="30" r="19" fill="none" stroke="#d99116" stroke-width="2.5" />
+              <!-- Paw Emboss -->
+              <g fill="#925214">
+                <ellipse cx="30" cy="35" rx="7" ry="5.5" />
+                <circle cx="22" cy="26" r="3" />
+                <circle cx="27.5" cy="23" r="3" />
+                <circle cx="33" cy="23" r="3" />
+                <circle cx="38" cy="26.5" r="3" />
+              </g>
+            </svg>
+          </div>
+          <span id="hud-coin-val" class="currency-num">0</span>
+        </div>
+
+        <!-- Left-Center: 3 Red Level-Up Category Cards (Offense, Defense, Support) -->
+        <div class="hud-levelup-group">
+          <!-- Offense (攻め) -->
+          <button id="btn-lv-offense" class="lv-card-btn">
+            <div class="lv-card-top">
+              <span class="lv-card-title">Offense</span>
+              <div class="lv-card-icon">
+                <svg viewBox="0 0 110 70" width="96" height="60">
+                  <path d="M8,36 C16,14 52,12 78,28 L102,12 L94,36 L102,60 L78,44 C52,60 16,58 8,36 Z" fill="#ffffff" />
+                  <circle cx="26" cy="31" r="4" fill="#ec6e5d" />
+                  <path d="M40,26 Q46,36 40,46" stroke="#ec6e5d" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                </svg>
+              </div>
+              <span id="lv-val-offense" class="lv-card-level">Lv.1</span>
+            </div>
+            <div class="lv-card-bottom">
+              <span class="mini-coin-badge">🐾</span>
+              <span class="lv-cost-val">100</span>
+            </div>
+          </button>
+
+          <!-- Defense (受け) -->
+          <button id="btn-lv-defense" class="lv-card-btn">
+            <div class="lv-card-top">
+              <span class="lv-card-title">Defense</span>
+              <div class="lv-card-icon">
+                <svg viewBox="0 0 90 76" width="82" height="62">
+                  <ellipse cx="45" cy="48" rx="20" ry="16" fill="#ffffff" />
+                  <circle cx="22" cy="26" r="7.5" fill="#ffffff" />
+                  <circle cx="37" cy="17" r="7.5" fill="#ffffff" />
+                  <circle cx="53" cy="17" r="7.5" fill="#ffffff" />
+                  <circle cx="68" cy="26" r="7.5" fill="#ffffff" />
+                </svg>
+              </div>
+              <span id="lv-val-defense" class="lv-card-level">Lv.1</span>
+            </div>
+            <div class="lv-card-bottom">
+              <span class="mini-coin-badge">🐾</span>
+              <span class="lv-cost-val">100</span>
+            </div>
+          </button>
+
+          <!-- Support (補助) -->
+          <button id="btn-lv-support" class="lv-card-btn">
+            <div class="lv-card-top">
+              <span class="lv-card-title">Support</span>
+              <div class="lv-card-icon">
+                <svg viewBox="0 0 90 80" width="82" height="62">
+                  <g fill="#ffffff">
+                    <path d="M45,38 C32,14 14,22 28,38 C14,54 32,62 45,38 Z" />
+                    <path d="M45,38 C58,14 76,22 62,38 C76,54 58,62 45,38 Z" />
+                    <path d="M45,38 C24,22 30,4 45,18 C60,4 66,22 45,38 Z" />
+                    <path d="M45,38 C28,54 34,70 45,56 C56,70 62,54 45,38 Z" />
+                    <path d="M45,42 Q50,62 58,72" stroke="#ffffff" stroke-width="5.5" fill="none" stroke-linecap="round" />
+                  </g>
+                </svg>
+              </div>
+              <span id="lv-val-support" class="lv-card-level">Lv.1</span>
+            </div>
+            <div class="lv-card-bottom">
+              <span class="mini-coin-badge">🐾</span>
+              <span class="lv-cost-val">100</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Bottom-Center Peeking Animated Mascot Tabby Cat -->
+        <div id="bottom-mascot-wrap">
+          <canvas id="bottom-mascot-canvas" width="240" height="175"></canvas>
+        </div>
+
+        <!-- Right-Center: 3 Circular Action Buttons (Skill, Enchant, Item) -->
+        <div class="hud-circle-group">
+          <!-- Skill (スキル) -->
+          <button id="btn-circle-skill" class="circle-action-btn">
+            <span id="badge-skill" class="circle-notify-badge hidden">0</span>
+            <svg viewBox="0 0 90 90" width="84" height="84">
+              <g stroke="#5c2d16" stroke-width="3.5" fill="#eab308" stroke-linejoin="round">
+                <polygon points="45,8 52,22 38,22" />
+                <polygon points="45,82 52,68 38,68" />
+                <polygon points="8,45 22,52 22,38" />
+                <polygon points="82,45 68,52 68,38" />
+                <polygon points="18,18 31,24 24,31" />
+                <polygon points="72,72 59,66 66,59" />
+                <polygon points="72,18 59,24 66,31" />
+                <polygon points="18,72 31,66 24,59" />
+              </g>
+              <circle cx="45" cy="45" r="21" fill="#facc15" stroke="#5c2d16" stroke-width="4" />
+            </svg>
+            <span class="circle-btn-label">Skill</span>
+          </button>
+
+          <!-- Enchant (エンチャント) -->
+          <button id="btn-circle-enchant" class="circle-action-btn">
+            <span id="badge-enchant" class="circle-notify-badge hidden">0</span>
+            <svg viewBox="0 0 90 90" width="84" height="84">
+              <path d="M52,18 A26,26 0 1,0 72,56 A21,21 0 1,1 52,18 Z" fill="#d8b4fe" stroke="#4a1d6e" stroke-width="4" stroke-linejoin="round" />
+              <path d="M32,26 L36,35 L45,39 L36,43 L32,52 L28,43 L19,39 L28,35 Z" fill="#f0abfc" stroke="#4a1d6e" stroke-width="3.2" stroke-linejoin="round" />
+            </svg>
+            <span class="circle-btn-label">Enchant</span>
+          </button>
+
+          <!-- Item (アイテム) -->
+          <button id="btn-circle-item" class="circle-action-btn">
+            <span id="badge-item" class="circle-notify-badge hidden">0</span>
+            <svg viewBox="0 0 90 90" width="84" height="84">
+              <path d="M34,24 C34,12 56,12 56,24" fill="none" stroke="#5c2d16" stroke-width="5" stroke-linecap="round" />
+              <rect x="20" y="24" width="50" height="46" rx="14" fill="#d99b52" stroke="#5c2d16" stroke-width="4" />
+              <path d="M20,38 Q45,48 70,38" fill="none" stroke="#5c2d16" stroke-width="3.5" />
+              <rect x="28" y="48" width="34" height="16" rx="6" fill="#c67d30" stroke="#5c2d16" stroke-width="3.2" />
+              <circle cx="45" cy="42" r="4.5" fill="#fde047" stroke="#5c2d16" stroke-width="2.5" />
+            </svg>
+            <span class="circle-btn-label">Item</span>
+          </button>
+        </div>
+
+        <!-- Far Right: Gem Counter Pill + Status & Menu Utility Buttons -->
+        <div class="hud-right-stack">
+          <div class="hud-currency-pill gem-pill">
+            <span id="hud-gem-val" class="currency-num">44</span>
+            <div class="currency-icon gem-svg-wrap">
+              <svg viewBox="0 0 70 64" width="68" height="62">
+                <polygon points="18,10 52,10 66,28 35,58 4,28" fill="#7dd3fc" stroke="#1e293b" stroke-width="4.2" stroke-linejoin="round" />
+                <polygon points="18,10 52,10 44,28 26,28" fill="#e0f2fe" />
+                <polyline points="4,28 66,28" stroke="#0284c7" stroke-width="2.5" fill="none" />
+                <polyline points="18,10 26,28 35,58 44,28 52,10" stroke="#0284c7" stroke-width="2.5" fill="none" stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="hud-utility-row">
+            <button id="btn-util-status" class="util-icon-btn">
+              <svg viewBox="0 0 48 48" width="42" height="42">
+                <rect x="10" y="6" width="28" height="36" rx="3" fill="none" stroke="#ffffff" stroke-width="4.5" />
+                <line x1="16" y1="15" x2="32" y2="15" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                <line x1="16" y1="24" x2="32" y2="24" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+                <line x1="16" y1="33" x2="32" y2="33" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+              </svg>
+              <span class="util-btn-label">Status</span>
+            </button>
+
+            <button id="btn-util-menu" class="util-icon-btn">
+              <svg viewBox="0 0 48 48" width="42" height="42">
+                <circle cx="24" cy="24" r="11" fill="none" stroke="#ffffff" stroke-width="5" />
+                <g stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+                  <line x1="24" y1="4" x2="24" y2="10" />
+                  <line x1="24" y1="38" x2="24" y2="44" />
+                  <line x1="4" y1="24" x2="10" y2="24" />
+                  <line x1="38" y1="24" x2="44" y2="24" />
+                  <line x1="10" y1="10" x2="14" y2="14" />
+                  <line x1="34" y1="34" x2="38" y2="38" />
+                  <line x1="38" y1="10" x2="34" y2="14" />
+                  <line x1="14" y1="34" x2="10" y2="38" />
+                </g>
+              </svg>
+              <span class="util-btn-label">Menu</span>
+            </button>
+          </div>
+        </div>
+      </footer>
+
+      <!-- White Gloved Hover Hand Pointer for HUD Buttons -->
+      <div id="hud-hover-hand" class="hidden"></div>
+
+      <!-- Flying Miniature Card Layer (Skill/Enchant card flying into HUD button) -->
+      <div id="flying-card-layer"></div>
+
+      <!-- ================= MODAL 1: STAGE 1 CIRCULAR EMBLEM INTRO (frame_04.jpg) ================= -->
+      <div id="stage-emblem-modal" class="modal-backdrop">
+        <div class="stage-emblem-circle">
+          <div id="emblem-folk-ring-svg"></div>
+          <div class="emblem-inner-disc">
+            <div class="emblem-top-cream">
+              <h1 class="emblem-stage-title">STAGE 1</h1>
+              <p class="emblem-stage-subtitle">Make lots of cats happy!</p>
+              <div class="emblem-dotted-divider"></div>
+              <div id="emblem-cat-fish-icons"></div>
+            </div>
+            <div class="emblem-feature-pill">Stage Features</div>
+            <div class="emblem-bottom-coral">
+              <p class="emblem-feature-bullet">• A prototype stage built just to test things out!</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-stage-continue" class="stage-continue-prompt">
+          <span class="key-badge">Z</span>
+          <span class="prompt-label">Continue</span>
+        </button>
+      </div>
+
+      <!-- ================= MODAL 2: WAVE 1 GINGHAM PLAID BANNER (frame_06.jpg) ================= -->
+      <div id="wave-banner" class="hidden">
+        <div class="wave-gingham-strip">
+          <div id="wave-banner-title"></div>
+        </div>
+      </div>
+
+      <!-- ================= MODAL 3: 3-CARD ROGUELITE DRAFT (frame_13..45) ================= -->
+      <div id="card-draft-modal" class="hidden">
+        <div class="stitched-brown-ribbon">
+          <span>Pick One!</span>
+        </div>
+        <div id="card-draft-row"></div>
+      </div>
+
+      <!-- ================= MODAL 4: 9-CATEGORY STATUS SCREEN (frame_32.jpg) ================= -->
+      <div id="status-modal" class="hidden">
+        <div class="stitched-brown-ribbon status-ribbon">
+          <span>Status</span>
+        </div>
+        <div id="status-grid-container"></div>
+        <button id="btn-status-back" class="status-back-prompt">
+          <span class="key-badge">X</span>
+          <span class="prompt-label">Back</span>
+        </button>
+      </div>
+
+      <!-- ================= MODAL 5: MENU / SETTINGS MODAL ================= -->
+      <div id="menu-modal" class="hidden">
+        <div class="stitched-brown-ribbon status-ribbon">
+          <span>Menu</span>
+        </div>
+        <div class="menu-card-box">
+          <h3>Too Cute to Handle! (#ねこがかわいくておしまいになるゲーム)</h3>
+          <p class="menu-credit">English recreation of Tatsuya Koyama's handcrafted UI & gameplay prototype</p>
+          <label class="menu-toggle-row">
+            <input type="checkbox" id="chk-free-draft" checked />
+            <span>Prototype Free-Draft Mode (Level up Offense / Defense / Support even at 0 Coins, matching the "DEBUGGING" video)</span>
+          </label>
+          <div class="menu-btn-row">
+            <button id="btn-menu-restart" class="menu-action-btn coral">Restart Stage 1</button>
+            <button id="btn-menu-close" class="menu-action-btn green">Resume Game [X]</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Orange Triangular UI Pointer Cursor -->
+      <div id="ui-arrow-cursor" class="hidden">
+        <svg viewBox="0 0 48 48" width="46" height="46">
+          <polygon points="4,4 42,20 24,26 16,44" fill="#f97316" stroke="#451a03" stroke-width="3.5" stroke-linejoin="round" />
+          <polygon points="8,8 36,20 22,24" fill="#fb923c" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

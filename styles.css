@@ -1,0 +1,1364 @@
+/* Handcrafted UI & Art Direction Stylesheet
+   Matches Tatsuya Koyama's #ねこがかわいくておしまいになるゲーム (Too Cute to Handle!) */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: clip;
+  background-color: #1e293b;
+  font-family: "Fredoka", "M PLUS Rounded 1c", "Nunito", sans-serif;
+}
+
+#viewport-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: clip;
+  background: #0f172a;
+}
+
+#game-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: center center;
+  overflow: clip;
+  background: #8ec5fc;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 1. Main 2.5D Seaside Plaza Canvas */
+#plaza-canvas {
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  transition: filter 0.35s ease;
+}
+
+#plaza-canvas.dof-blur {
+  filter: blur(5px) brightness(0.96);
+}
+
+/* 2. Playfield Foxtail Cat Teaser Hand Cursor */
+#playfield-teaser-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 175px;
+  height: 205px;
+  pointer-events: none;
+  z-index: 15;
+  transform-origin: 120px 155px;
+  will-change: transform;
+}
+
+/* 3. Manga/Comic Halftone Screentone Overlay (frame_13.jpg) */
+#halftone-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 22;
+  background: rgba(58, 88, 150, 0.24);
+}
+
+.halftone-band {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 360px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.72) 34%, transparent 38%);
+  background-size: 13px 13px;
+}
+
+.halftone-band.top-band {
+  top: 0;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 55%, transparent 100%);
+}
+
+.halftone-band.bottom-band {
+  bottom: 0;
+  height: 410px;
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 60%, transparent 100%);
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 60%, transparent 100%);
+}
+
+/* 4. Foreground Blurred Terracotta Flowerpots (Tilt-Shift DoF Bokeh Layer, frame_04 & frame_13) */
+#dof-flowerpots-layer {
+  position: absolute;
+  left: -30px;
+  right: -30px;
+  bottom: -240px;
+  height: 225px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 25;
+  filter: blur(10px);
+  opacity: 0;
+  transition: bottom 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
+}
+
+#dof-flowerpots-layer.active {
+  bottom: -28px;
+  opacity: 0.96;
+}
+
+.dof-pot {
+  position: relative;
+  width: 245px;
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.dof-pot .pot-flowers {
+  width: 170px;
+  height: 75px;
+  border-radius: 50%;
+  margin-bottom: -22px;
+  z-index: 3;
+}
+
+.dof-pot .pot-flowers.red {
+  background: radial-gradient(circle at 30% 40%, #ef4444 25%, #f97316 55%, transparent 72%),
+              radial-gradient(circle at 70% 45%, #dc2626 25%, #fb7185 55%, transparent 72%);
+}
+
+.dof-pot .pot-flowers.orange {
+  background: radial-gradient(circle at 35% 40%, #f97316 28%, #facc15 58%, transparent 72%),
+              radial-gradient(circle at 68% 45%, #ea580c 26%, #fde047 55%, transparent 72%);
+}
+
+.dof-pot .pot-flowers.pink-yellow {
+  background: radial-gradient(circle at 35% 45%, #ec4899 30%, #f472b6 58%, transparent 74%),
+              radial-gradient(circle at 68% 40%, #facc15 30%, #a3e635 60%, transparent 74%);
+}
+
+.dof-pot .pot-bush {
+  width: 215px;
+  height: 85px;
+  background: radial-gradient(circle at 50% 50%, #4ade80, #16a34a);
+  border-radius: 55px;
+  border: 6px solid #ffffff;
+  margin-bottom: -18px;
+  z-index: 2;
+}
+
+.dof-pot .pot-base {
+  width: 175px;
+  height: 98px;
+  background: linear-gradient(to right, #c25934, #df7348, #b04b28);
+  clip-path: polygon(6% 0%, 94% 0%, 82% 100%, 18% 100%);
+  border-top: 14px solid #a84624;
+  z-index: 1;
+}
+
+/* 5. TOP HUD BAR (frame_01.jpg) */
+#top-hud {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  right: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.hud-top-left {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.hud-portrait-ring {
+  width: 184px;
+  height: 184px;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 11px;
+  box-shadow: 0 5px 14px rgba(30, 58, 95, 0.32);
+  z-index: 2;
+}
+
+.hud-portrait-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+
+.hud-heart-bar-shell {
+  position: relative;
+  margin-left: -34px;
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.hud-heart-track {
+  position: relative;
+  width: 555px;
+  height: 54px;
+  background: rgba(132, 168, 212, 0.78);
+  border: 11px solid #ffffff;
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.25);
+  display: flex;
+  align-items: center;
+}
+
+#hud-heart-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f43f5e, #fb7185);
+  border-radius: 18px;
+  transition: width 0.25s ease;
+}
+
+#hud-heart-text {
+  position: absolute;
+  left: 52px;
+  font-size: 27px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 6px #881337;
+  paint-order: stroke fill;
+  letter-spacing: 1px;
+}
+
+.hud-double-hearts {
+  position: relative;
+  margin-left: 6px;
+  margin-top: -10px;
+  width: 82px;
+  height: 76px;
+}
+
+.hud-double-hearts .heart-big {
+  position: absolute;
+  left: 0;
+  top: -8px;
+  font-size: 64px;
+  color: #ffffff;
+  transform: rotate(-16deg);
+  filter: drop-shadow(0 3px 6px rgba(30, 58, 95, 0.26));
+}
+
+.hud-double-hearts .heart-small {
+  position: absolute;
+  left: 38px;
+  top: 28px;
+  font-size: 42px;
+  color: #ffffff;
+  transform: rotate(18deg);
+  filter: drop-shadow(0 3px 6px rgba(30, 58, 95, 0.26));
+}
+
+#hud-wave-text {
+  margin-top: 10px;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 6px #475569;
+  paint-order: stroke fill;
+  letter-spacing: 1.5px;
+}
+
+/* 6. BOTTOM HUD BAR (frame_01.jpg) */
+#bottom-hud {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 235px;
+  background: linear-gradient(to top, rgba(64, 96, 108, 0.62) 0%, rgba(255, 255, 255, 0.48) 65%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 18px 22px 14px;
+  z-index: 20;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#bottom-hud.draft-lowered {
+  transform: translateY(155px);
+}
+
+.hud-currency-pill {
+  position: relative;
+  width: 295px;
+  height: 60px;
+  background: #f5eedc;
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.22);
+  margin-bottom: 64px;
+}
+
+.coin-pill {
+  padding-left: 72px;
+  padding-right: 26px;
+  justify-content: flex-end;
+}
+
+.coin-pill .coin-svg-wrap {
+  position: absolute;
+  left: -4px;
+  top: -8px;
+}
+
+.gem-pill {
+  width: 285px;
+  padding-left: 28px;
+  padding-right: 76px;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.gem-pill .gem-svg-wrap {
+  position: absolute;
+  right: -8px;
+  top: -6px;
+}
+
+.currency-num {
+  font-size: 34px;
+  font-weight: 900;
+  color: #432312;
+  letter-spacing: 0.5px;
+}
+
+/* 3 Red Level-Up Category Cards (Offense, Defense, Support) */
+.hud-levelup-group {
+  display: flex;
+  gap: 14px;
+  margin-left: -10px;
+  margin-bottom: 2px;
+  z-index: 5;
+}
+
+.lv-card-btn {
+  width: 156px;
+  height: 194px;
+  background: #ffffff;
+  border: none;
+  border-radius: 22px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(24, 38, 64, 0.32);
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lv-card-btn:hover {
+  transform: translateY(-6px) scale(1.03);
+}
+
+.lv-card-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.lv-card-top {
+  flex: 1;
+  background: linear-gradient(135deg, #f07666 0%, #eb6857 52%, #e35d4c 52%, #e35d4c 100%);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px 6px;
+}
+
+.lv-card-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 4.5px #572b24;
+  paint-order: stroke fill;
+}
+
+.lv-card-icon {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lv-card-level {
+  font-size: 23px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 4.5px #572b24;
+  paint-order: stroke fill;
+}
+
+.lv-card-bottom {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 2px;
+}
+
+.mini-coin-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fcd34d;
+  border: 2.5px solid #5c3412;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.lv-cost-val {
+  font-size: 29px;
+  font-weight: 900;
+  color: #451a03;
+}
+
+/* Bottom-Center Mascot Cat */
+#bottom-mascot-wrap {
+  width: 220px;
+  height: 165px;
+  margin-bottom: -22px;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* 3 Circular Action Buttons (Skill, Enchant, Item) */
+.hud-circle-group {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 34px;
+  z-index: 5;
+}
+
+.circle-action-btn {
+  position: relative;
+  width: 146px;
+  height: 146px;
+  border-radius: 50%;
+  background: #f5eedc;
+  border: 6px solid #ffffff;
+  box-shadow: inset 0 0 0 3.5px #6b3422, 0 6px 14px rgba(24, 38, 64, 0.32);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.circle-action-btn:hover {
+  transform: translateY(-5px) scale(1.04);
+}
+
+.circle-action-btn.badge-pop {
+  animation: circleButtonPop 0.36s cubic-bezier(0.22, 1.4, 0.36, 1);
+}
+
+@keyframes circleButtonPop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+.circle-btn-label {
+  position: absolute;
+  bottom: 12px;
+  font-size: 21px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 5px #451a03;
+  paint-order: stroke fill;
+}
+
+.circle-notify-badge {
+  position: absolute;
+  top: -2px;
+  right: 2px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #db2777;
+  border: 3px solid #ffffff;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Right Stack: Gem Pill + Status & Menu */
+.hud-right-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: -6px;
+}
+
+.hud-utility-row {
+  display: flex;
+  gap: 28px;
+  margin-right: 18px;
+}
+
+.util-icon-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.14s ease;
+}
+
+.util-icon-btn:hover {
+  transform: scale(1.08);
+}
+
+.util-btn-label {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 4px #334155;
+  paint-order: stroke fill;
+}
+
+/* White Gloved Pointing Hand (☞) for Hovered HUD Buttons & Draft Cards */
+#hud-hover-hand,
+.card-hover-hand {
+  width: 96px;
+  height: 76px;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 95'><g stroke='%23ffffff' stroke-width='9' stroke-linejoin='round' stroke-linecap='round'><path d='M16,52 C14,36 28,24 44,26 L56,14 C64,8 74,16 66,26 L62,32 L98,32 C110,32 110,48 98,48 L72,48 C78,52 78,62 68,64 C72,70 68,78 56,78 L34,78 C20,78 16,66 16,52 Z'/></g><path d='M16,52 C14,36 28,24 44,26 L56,14 C64,8 74,16 66,26 L62,32 L98,32 C110,32 110,48 98,48 L72,48 C78,52 78,62 68,64 C72,70 68,78 56,78 L34,78 C20,78 16,66 16,52 Z' fill='%23ffffff' stroke='%23451a03' stroke-width='5' stroke-linejoin='round'/></svg>");
+  animation: handPointBob 0.55s ease-in-out infinite alternate;
+}
+
+#hud-hover-hand {
+  position: absolute;
+  z-index: 35;
+}
+
+@keyframes handPointBob {
+  0% { transform: translateX(-6px); }
+  100% { transform: translateX(6px); }
+}
+
+/* Flying Miniature Card (Skill/Enchant card flying into bottom button, frame_10 & frame_14) */
+#flying-card-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.flying-mini-card {
+  position: absolute;
+  width: 76px;
+  height: 108px;
+  background: #485988;
+  border: 4px solid #cba344;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.34s ease;
+}
+
+.flying-mini-card::after {
+  content: "🐱";
+  font-size: 26px;
+  filter: sepia(1) saturate(4) hue-rotate(8deg);
+}
+
+/* ================= MODAL 1: STAGE 1 CIRCULAR EMBLEM (frame_04.jpg) ================= */
+#stage-emblem-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-emblem-circle {
+  position: relative;
+  width: 685px;
+  height: 685px;
+  border-radius: 50%;
+  background: #f0d7b5;
+  border: 20px solid #a16b3b;
+  box-shadow: 0 18px 50px rgba(20, 35, 65, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: emblemPopIn 0.42s cubic-bezier(0.22, 1.25, 0.36, 1);
+}
+
+@keyframes emblemPopIn {
+  0% { transform: scale(0.55); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+#emblem-folk-ring-svg {
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+}
+
+.emblem-inner-disc {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f2d9b6;
+}
+
+.emblem-top-cream {
+  width: 100%;
+  height: 308px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 66px;
+}
+
+.emblem-stage-title {
+  font-size: 56px;
+  font-weight: 900;
+  color: #164e78;
+  letter-spacing: 2px;
+  margin-bottom: 22px;
+}
+
+.emblem-stage-subtitle {
+  font-size: 27px;
+  font-weight: 800;
+  color: #5c3418;
+  margin-bottom: 12px;
+}
+
+.emblem-dotted-divider {
+  width: 390px;
+  border-bottom: 3px dotted #9c6234;
+  margin-bottom: 14px;
+}
+
+#emblem-cat-fish-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.emblem-mini-icon {
+  width: 36px;
+  height: 28px;
+}
+
+.emblem-feature-pill {
+  position: absolute;
+  top: 282px;
+  background: #3ea36e;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 900;
+  padding: 8px 34px;
+  border-radius: 18px;
+  border: 3.5px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+  z-index: 3;
+}
+
+.emblem-bottom-coral {
+  width: 100%;
+  flex: 1;
+  background: repeating-linear-gradient(
+    to bottom,
+    #df5b3e 0px,
+    #df5b3e 14px,
+    #d45135 14px,
+    #d45135 28px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 46px 18px;
+}
+
+.emblem-feature-bullet {
+  color: #ffffff;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.stage-continue-prompt,
+.status-back-prompt {
+  position: absolute;
+  right: 92px;
+  bottom: 42px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.14s ease;
+}
+
+.stage-continue-prompt:hover,
+.status-back-prompt:hover {
+  transform: scale(1.08);
+}
+
+.key-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #334155;
+  font-size: 22px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+}
+
+.prompt-label {
+  font-size: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  -webkit-text-stroke: 5px #451a03;
+  paint-order: stroke fill;
+}
+
+/* ================= MODAL 2: WAVE 1 GINGHAM PLAID BANNER (frame_06.jpg) ================= */
+#wave-banner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 440px;
+  height: 132px;
+  z-index: 38;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: waveBannerSweep 1.85s ease forwards;
+}
+
+@keyframes waveBannerSweep {
+  0% { transform: scaleY(0.1); opacity: 0; }
+  14% { transform: scaleY(1); opacity: 1; }
+  84% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(0.1); opacity: 0; }
+}
+
+.wave-gingham-strip {
+  width: 100%;
+  height: 100%;
+  background-color: #f4fcb8;
+  background-image:
+    linear-gradient(90deg, rgba(190, 224, 82, 0.45) 50%, transparent 50%),
+    linear-gradient(rgba(190, 224, 82, 0.45) 50%, transparent 50%);
+  background-size: 32px 32px;
+  border-top: 4px solid #ffffff;
+  border-bottom: 4px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(30, 58, 95, 0.22);
+}
+
+#wave-banner-title {
+  display: flex;
+  gap: 6px;
+}
+
+.wave-char {
+  display: inline-block;
+  font-size: 86px;
+  font-weight: 900;
+  color: #facc15;
+  -webkit-text-stroke: 12px #5c191e;
+  paint-order: stroke fill;
+  transform: rotate(-4deg);
+  animation: waveCharBounce 0.45s cubic-bezier(0.22, 1.4, 0.36, 1) backwards;
+}
+
+@keyframes waveCharBounce {
+  0% { transform: translateY(-48px) scale(0.4) rotate(-12deg); opacity: 0; }
+  100% { transform: translateY(0) scale(1) rotate(-4deg); opacity: 1; }
+}
+
+/* ================= MODAL 3: 3-CARD ROGUELITE DRAFT (frame_13..45) ================= */
+#card-draft-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 36;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 126px;
+}
+
+.stitched-brown-ribbon {
+  position: relative;
+  width: 530px;
+  height: 74px;
+  background: #5a2310;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  clip-path: polygon(0% 0%, 100% 0%, 95% 50%, 100% 100%, 0% 100%, 5% 50%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  margin-bottom: 34px;
+}
+
+.stitched-brown-ribbon::before,
+.stitched-brown-ribbon::after {
+  content: "";
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  border-top: 3px dashed rgba(212, 148, 114, 0.72);
+}
+
+.stitched-brown-ribbon::before { top: 8px; }
+.stitched-brown-ribbon::after { bottom: 8px; }
+
+#card-draft-row {
+  display: flex;
+  gap: 96px;
+  align-items: center;
+  justify-content: center;
+  perspective: 1400px;
+}
+
+.draft-card-slot {
+  position: relative;
+  width: 382px;
+  height: 556px;
+  cursor: pointer;
+  /* Starts stacked in bottom-left deck before .dealt is added (frame_17.jpg) */
+  transform: translate(-540px, 420px) rotate(-14deg) scale(0.84);
+  opacity: 0;
+  transition: transform 0.38s cubic-bezier(0.22, 1.12, 0.36, 1), opacity 0.25s ease;
+}
+
+.draft-card-slot.dealt {
+  transform: translate(0, 0) rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+.draft-card-slot.hovered {
+  transform: translateY(-10px) scale(1.03);
+}
+
+/* White Halftone Spotlight Glow behind hovered/chosen card (frame_29.jpg, frame_45.jpg) */
+.draft-card-slot.hovered::before,
+.draft-card-slot.chosen-burst::before {
+  content: "";
+  position: absolute;
+  inset: -24px -22px;
+  border-radius: 34px;
+  background-color: rgba(255, 255, 255, 0.55);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.95) 40%, transparent 45%);
+  background-size: 12px 12px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.draft-card-slot.dismissed-down {
+  transform: translateY(520px) rotate(6deg) scale(0.9);
+  opacity: 0;
+}
+
+.draft-card-slot .card-hover-hand {
+  position: absolute;
+  left: -82px;
+  top: 215px;
+  z-index: 12;
+  display: none;
+}
+
+.draft-card-slot.hovered .card-hover-hand {
+  display: block;
+}
+
+.draft-card-3d {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.draft-card-slot.flipped .draft-card-3d {
+  transform: rotateY(180deg);
+}
+
+.draft-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.35);
+}
+
+/* Ornate Navy & Gold Card Back (frame_17.jpg, frame_28.jpg) */
+.draft-card-back {
+  background-color: #4b5d8c;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 25%, transparent 28%);
+  background-size: 36px 36px;
+  border: 12px solid #b58d3d;
+  padding: 12px;
+  display: flex;
+}
+
+.card-back-gold-frame {
+  position: relative;
+  flex: 1;
+  border: 3px solid #cba344;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corner-paw {
+  position: absolute;
+  font-size: 18px;
+  filter: sepia(1) saturate(4) hue-rotate(8deg);
+  opacity: 0.85;
+}
+.corner-paw.tl { top: 8px; left: 10px; }
+.corner-paw.tr { top: 8px; right: 10px; }
+.corner-paw.bl { bottom: 8px; left: 10px; }
+.corner-paw.br { bottom: 8px; right: 10px; }
+
+.card-back-center-medallion {
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  border: 4px solid #cba344;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(52, 68, 108, 0.85);
+}
+
+/* Card Front (frame_13.jpg, frame_18.jpg, frame_24.jpg) */
+.draft-card-front {
+  transform: rotateY(180deg);
+  background: #ffffff;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-art-header {
+  position: relative;
+  height: 232px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Color Themes */
+.theme-blue .card-art-header { background: linear-gradient(135deg, #4cb5f9, #2b9af3); }
+.theme-blue .card-title-banner { background: #cbeafe; }
+.theme-blue .card-footer-pill { background: #1e88e5; }
+
+.theme-green .card-art-header { background: linear-gradient(135deg, #8ed123, #74b810); }
+.theme-green .card-title-banner { background: #e3f6c3; }
+.theme-green .card-footer-pill { background: #65a30d; }
+
+.theme-yellow .card-art-header { background: linear-gradient(135deg, #f3c614, #dfaa06); }
+.theme-yellow .card-title-banner { background: #fef0b8; }
+.theme-yellow .card-footer-pill { background: #856810; }
+
+.theme-purple .card-art-header { background: linear-gradient(135deg, #a662f6, #8b3ee2); }
+.theme-purple .card-title-banner { background: #eddbfd; }
+.theme-purple .card-footer-pill { background: #6d28d9; }
+
+.card-art-header.striped-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -35deg,
+    rgba(255, 255, 255, 0.12) 0px,
+    rgba(255, 255, 255, 0.12) 26px,
+    transparent 26px,
+    transparent 52px
+  );
+}
+
+.card-kari-fish-svg {
+  width: 245px;
+  height: 145px;
+  z-index: 2;
+}
+
+/* Top-Left Moon / Sun Badge on Enchant & Skill Cards */
+.card-type-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f5eedc;
+  border: 3px solid #5c2d16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+}
+
+/* Side White Triangle Strips on Level-Up Cards (frame_13.jpg) */
+.card-tri-strip {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 3;
+}
+.card-tri-strip.left { left: 10px; }
+.card-tri-strip.right { right: 10px; }
+
+.tri-left, .tri-right {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 13px solid #ffffff;
+}
+
+/* Ornate Filigree Border on Purple Offering Cards (frame_24.jpg) */
+.card-offering-filigree {
+  position: absolute;
+  inset: 12px;
+  border: 2.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.filigree-corner {
+  position: absolute;
+  font-size: 14px;
+  filter: brightness(10);
+}
+.filigree-corner.tl { top: 4px; left: 6px; }
+.filigree-corner.tr { top: 4px; right: 6px; }
+.filigree-corner.bl { bottom: 4px; left: 6px; }
+.filigree-corner.br { bottom: 4px; right: 6px; }
+
+.card-title-banner {
+  height: 62px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+  font-weight: 900;
+  color: #362218;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.card-desc-box {
+  flex: 1;
+  background: #f4eee1;
+  border-radius: 12px;
+  margin-top: 6px;
+  padding: 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.42;
+  color: #3e2013;
+}
+
+.card-footer-pill {
+  height: 36px;
+  margin-top: 6px;
+  border-radius: 0 0 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* ================= MODAL 4: 9-CATEGORY STATUS SCREEN (frame_32.jpg) ================= */
+#status-modal,
+#menu-modal {
+  position: absolute;
+  inset: 0;
+  z-index: 42;
+  background: rgba(18, 28, 48, 0.72);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 28px;
+}
+
+.status-ribbon {
+  margin-bottom: 24px;
+}
+
+#status-grid-container {
+  width: 1620px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 76px;
+}
+
+.status-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.status-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.status-group-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-icon-box {
+  width: 88px;
+  height: 88px;
+  background: #ffffff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 46px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.status-svg-icon.crit-fish {
+  filter: hue-rotate(140deg) saturate(2.2);
+}
+
+.status-green-title {
+  flex: 1;
+  height: 44px;
+  background: rgba(34, 84, 52, 0.85);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  padding-left: 18px;
+  color: #a3e635;
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.status-rows {
+  padding-left: 102px;
+  margin-top: -32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 32px;
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.stat-sublabel {
+  color: #cbd5e1;
+  font-size: 18px;
+  margin-left: auto;
+  margin-right: 14px;
+}
+
+.stat-dots {
+  flex: 1;
+  border-bottom: 3px dotted rgba(255, 255, 255, 0.35);
+  margin: 0 14px;
+}
+
+.stat-formula-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-pill {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 2px 14px;
+  min-width: 112px;
+  text-align: right;
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.base-pill { color: #1e3a5f; }
+.mult-pill, .single-val-pill { color: #9f1239; }
+.stat-op { color: #ffffff; font-weight: 900; }
+.stat-result {
+  min-width: 52px;
+  text-align: left;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.status-back-prompt {
+  right: auto;
+  bottom: 26px;
+}
+
+/* Menu Card Box */
+.menu-card-box {
+  width: 780px;
+  background: #f5eedc;
+  border: 8px solid #a16b3b;
+  border-radius: 28px;
+  padding: 36px 42px;
+  color: #432312;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 40px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.menu-card-box h3 {
+  font-size: 30px;
+  font-weight: 900;
+  color: #164e78;
+}
+
+.menu-credit {
+  font-size: 20px;
+  color: #6b4423;
+}
+
+.menu-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 21px;
+  font-weight: 800;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.menu-toggle-row input {
+  width: 26px;
+  height: 26px;
+}
+
+.menu-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+  margin-top: 10px;
+}
+
+.menu-action-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 28px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  cursor: pointer;
+}
+.menu-action-btn.coral { background: #e35d4c; }
+.menu-action-btn.green { background: #3ea36e; }
+
+/* Custom Orange Triangular UI Pointer */
+#ui-arrow-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 46px;
+  height: 46px;
+  pointer-events: none;
+  z-index: 60;
+  will-change: transform;
+}

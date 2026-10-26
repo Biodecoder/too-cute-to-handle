@@ -1,0 +1,9 @@
+{
+  "name": "too-cute-to-handle",
+  "version": "0.1.0",
+  "description": "English version of Tatsuya Koyama's #ねこがかわいくておしまいになるゲーム (Too Cute to Handle!) — Handcrafted 2.5D Seaside Cat Defense & Roguelite Deckbuilder",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  }
+}
